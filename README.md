@@ -1,4 +1,4 @@
-# gsasacademy
+# GSAS ACADEMY
 
 A new Flutter project.
 
