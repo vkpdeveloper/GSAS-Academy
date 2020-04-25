@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -5,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:gsasacademy/models/student_model.dart';
 import 'package:gsasacademy/providers/chat_provider.dart';
 import 'package:gsasacademy/providers/homework_provider.dart';
 import 'package:gsasacademy/providers/image_provider.dart';
@@ -23,40 +25,62 @@ class FirebaseUtils {
   StorageReference _storageReference;
   Firestore _firestore = Firestore.instance;
 
-  saveStudentData(String name, String className, String mobile, String admID,
-      String profileUrl, String section, String token) async {
+  saveStudentData(
+      String name,
+      String className,
+      String mobile,
+      String admID,
+      String profileUrl,
+      String section,
+      String token,
+      BuildContext context,
+      ProgressDialog progressDialog) async {
     SharedPreferences _prefs = await SharedPreferences.getInstance();
-    _prefs.setString("name", name);
-    _prefs.setString("class", className);
-    _prefs.setString("mobile", mobile);
-    _prefs.setString("admID", admID);
-    _prefs.setString("profile", profileUrl);
-    _prefs.setString("section", section);
-    _prefs.setBool("isStudent", true);
-    _firestoreStudent.collection(className).document(mobile).setData({
-      "name": name,
-      "mobile": mobile,
-      "profileUrl": profileUrl,
-      "class": className,
-      "section": section,
-      "admId": admID,
-      "token": token
-    }, merge: true);
+    _firestore.collection(className).document(mobile).get().then((data) {
+      if (data.exists) {
+        _prefs.setString("name", data.data['name']);
+        _prefs.setString("class", className);
+        _prefs.setString("mobile", mobile);
+        _prefs.setString("admID", admID);
+        _prefs.setString("profile", profileUrl);
+        _prefs.setString("section", section);
+        _prefs.setBool("isStudent", true);
+        _firestoreStudent.collection(className).document(mobile).setData({
+          "profileUrl": profileUrl,
+          "admId": admID,
+          "token": token
+        }, merge: true);
+        Fluttertoast.showToast(msg: "Login Successful");
+        Navigator.pushReplacementNamed(context, '/homescreen');
+        progressDialog.dismiss();
+      } else {
+        progressDialog.dismiss();
+        Fluttertoast.showToast(msg: "Student is not registered with us.");
+      }
+    });
   }
 
-  saveTeacherData(
-      String name, String mobile, String profileUrl, String token) async {
+  saveTeacherData(String name, String mobile, String profileUrl, String token,
+      ProgressDialog progressDialog, BuildContext context) async {
     SharedPreferences _prefs = await SharedPreferences.getInstance();
-    _prefs.setString("name", name);
-    _prefs.setString("mobile", mobile);
-    _prefs.setString("profile", profileUrl);
-    _prefs.setBool("isStudent", false);
-    _firestoreTeacher.document(mobile).setData({
-      "name": name,
-      "mobile": mobile,
-      "profileUrl": profileUrl,
-      "token": token
-    }, merge: true);
+    _firestore.collection('teacher').document(mobile).get().then((data) {
+      if (data.exists) {
+        _prefs.setString("name", data.data['name']);
+        _prefs.setString("mobile", mobile);
+        _prefs.setString("profile", profileUrl);
+        _prefs.setBool("isStudent", false);
+        _firestoreTeacher.document(mobile).setData({
+          "profileUrl": profileUrl,
+          "token": token
+        }, merge: true);
+        progressDialog.dismiss();
+        Navigator.pushReplacementNamed(context, '/hometeacher');
+        Fluttertoast.showToast(msg: "Verification Successful");
+      }else{
+        progressDialog.dismiss();
+        Fluttertoast.showToast(msg: "Teacher is not registered with us.");
+      }
+    });
   }
 
   Future<String> uploadImage(File imageFile, String className) async {
@@ -107,7 +131,7 @@ class FirebaseUtils {
       "id": id,
       "name": name,
       "timestamp": Timestamp.now()
-    });
+    }); 
     String topic = "${className}_$section";
     Response res = await get(
         'https://arcane-tor-25475.herokuapp.com/send?topic=$topic&title=New Message&msg=$message');
@@ -216,6 +240,7 @@ class FirebaseUtils {
       "homework": url,
       "isCorrect": false,
       "name": studentProvider.getStudentName,
+      "id": studentProvider.getStudentMobile,
       "isChecked": false
     }, merge: true);
   }
@@ -236,7 +261,7 @@ class FirebaseUtils {
   }
 
   sendAsTeacherMessage(ChatProvider chatProvider,
-      TeacherProvider teacherProvider, String message) {
+      TeacherProvider teacherProvider, String message) async {
     _firestore
         .collection("chat")
         .document(chatProvider.getSelectedClass)
@@ -249,6 +274,14 @@ class FirebaseUtils {
       "timestamp": Timestamp.now(),
       "name": teacherProvider.getTeacherName
     });
+    String topic =
+        "${chatProvider.getSelectedClass}_${chatProvider.getSelectedSection}";
+    await get(
+        'https://arcane-tor-25475.herokuapp.com/send?topic=$topic&title=New Message&msg=$message');
+    topic =
+        "${chatProvider.getSelectedClass}_${chatProvider.getSelectedSection}_teacher";
+    await get(
+        'https://arcane-tor-25475.herokuapp.com/send?topic=$topic&title=New Message (${chatProvider.getSelectedClass} Section: ${chatProvider.getSelectedSection}) &msg=$message');
   }
 
   deleteStudentMessageByTeacher(
@@ -299,6 +332,14 @@ class FirebaseUtils {
     List fileData = await uploadImagetoStorage(imageFile);
     sendImageMessageByTeacher(chatProvider, fileData, teacherProvider);
     imageUploadProvider.setToIdle();
+    String topic =
+        "${chatProvider.getSelectedClass}_${chatProvider.getSelectedSection}";
+    await get(
+        'https://arcane-tor-25475.herokuapp.com/send?topic=$topic&title=New Message&msg=Photo');
+    topic =
+        "${chatProvider.getSelectedClass}_${chatProvider.getSelectedSection}_teacher";
+    await get(
+        'https://arcane-tor-25475.herokuapp.com/send?topic=$topic&title=New Message (${chatProvider.getSelectedClass} Section: ${chatProvider.getSelectedSection}) &msg=Photo');
   }
 
   uploadHomeFile(
@@ -337,6 +378,10 @@ class FirebaseUtils {
           });
           Fluttertoast.showToast(msg: "Homework added");
           imageUploadProvider.setToIdle();
+          String topic =
+              "${chatProvider.getSelectedClass}_${chatProvider.getSelectedSection}_study";
+          await get(
+              'https://arcane-tor-25475.herokuapp.com/send?topic=$topic&title=Homework (${chatProvider.getSelectedSubject})&msg=Dear Students, Today\'s Homework Added');
         } else if (data.data['date'] == chatProvider.getCurrentDate) {
           Fluttertoast.showToast(msg: "Homework already added !");
           imageUploadProvider.setToIdle();
@@ -356,6 +401,10 @@ class FirebaseUtils {
         });
         Fluttertoast.showToast(msg: "Homework added");
         imageUploadProvider.setToIdle();
+        String topic =
+            "${chatProvider.getSelectedClass}_${chatProvider.getSelectedSection}_study";
+        await get(
+            'https://arcane-tor-25475.herokuapp.com/send?topic=$topic&title=Homework (${chatProvider.getSelectedSubject})&msg=Dear Students, Today\'s Homework Added');
       }
     });
   }
@@ -412,6 +461,10 @@ class FirebaseUtils {
         chatProvider.setVideoFileText("Select Video");
         progressDialog.dismiss();
         Fluttertoast.showToast(msg: "Class added");
+        String topic =
+            "${chatProvider.getSelectedClass}_${chatProvider.getSelectedSection}_study";
+        await get(
+            'https://arcane-tor-25475.herokuapp.com/send?topic=$topic&title=Online Class (${chatProvider.getSelectedSubject})&msg=Dear Students, Today\'s Video Class Added');
       }
     });
   }
@@ -450,7 +503,7 @@ class FirebaseUtils {
   }
 
   checkHomework(ChatProvider provider, DocumentSnapshot doc, bool isCorrect,
-      BuildContext context) {
+      BuildContext context, String message) async {
     _firestore
         .collection("submittedHomework")
         .document(provider.getSelectedClass)
@@ -459,6 +512,48 @@ class FirebaseUtils {
         .collection(provider.getSelectedSubject)
         .document(doc.documentID)
         .setData({"isChecked": true, "isCorrect": isCorrect}, merge: true);
+    if (isCorrect == false) {
+      String studentToken;
+      Firestore.instance
+          .collection(provider.getSelectedClass)
+          .document(doc.data['id'])
+          .get()
+          .then((document) async {
+        studentToken = document.data['token'];
+        await get(
+            'https://arcane-tor-25475.herokuapp.com/sendToStudent?token=$studentToken&title=Your Homework of ${provider.getSelectedSubject} Checked But Wrong&msg=$message');
+      });
+    } else if (isCorrect == true) {
+      String studentToken;
+      Firestore.instance
+          .collection(provider.getSelectedClass)
+          .document(doc.data['id'])
+          .get()
+          .then((document) async {
+        studentToken = document.data['token'];
+        await get(
+            'https://arcane-tor-25475.herokuapp.com/sendToStudent?token=$studentToken&title=Your Homework of ${provider.getSelectedSubject} Checked (Correct) &msg=Dear Student, You answers are right keep it up.');
+      });
+    }
+    Navigator.of(context).pop();
+  }
+
+  removeStudent(ChatProvider provider, String docID) {
+    _firestore.collection(provider.getSelectedClass).document(docID).delete();
+    Fluttertoast.showToast(msg: "Student Registration Removed");
+  }
+
+  addNewStudent(ChatProvider provider, Student student, BuildContext context) {
+    _firestore
+        .collection(provider.getSelectedClass)
+        .document(student.studentMobile)
+        .setData({
+      "name": student.name,
+      "section": provider.getSelectedSection,
+      "class": provider.getSelectedClass,
+      "mobile": student.studentMobile
+    }, merge: true);
+    Fluttertoast.showToast(msg: "Student Registration Done");
     Navigator.of(context).pop();
   }
 }

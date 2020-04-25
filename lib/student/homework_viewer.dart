@@ -53,7 +53,7 @@ class HomeworkPDFViewer extends StatelessWidget {
                   : FlatButton(
                       onPressed: () async {
                         File homeworkFile = await ImagePicker.pickImage(
-                            source: ImageSource.camera);
+                            source: ImageSource.camera, imageQuality: 50);
                         _utils.submitHomework(studentProvider, homeworkFile,
                             _homeworkProvider, title);
                       },

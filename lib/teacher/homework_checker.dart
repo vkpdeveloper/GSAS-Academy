@@ -91,130 +91,141 @@ class HomeworkChecker extends StatelessWidget {
                       child: CircularProgressIndicator(),
                     );
                   default:
-                    return ListView(
-                      children:
-                          snapshot.data.documents.map((DocumentSnapshot doc) {
-                        if (doc.data['isChecked'] == false) {
-                          return Padding(
-                            padding: const EdgeInsets.only(
-                                top: 10.0, left: 15.0, right: 15.0),
-                            child: Card(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(15.0)),
-                              elevation: 8.0,
-                              child: Column(
-                                children: <Widget>[
-                                  Container(
-                                    margin: EdgeInsets.all(10.0),
-                                    child: Column(
-                                      children: <Widget>[
-                                        Align(
-                                            alignment: Alignment.topLeft,
-                                            child: Text(
-                                              "ADM ID: ${doc.documentID}",
-                                              style: TextStyle(fontSize: 16.0),
-                                            )),
-                                        SizedBox(
-                                          height: 5.0,
-                                        ),
-                                        Align(
-                                            alignment: Alignment.topLeft,
-                                            child: Text(
-                                              "Name: ${doc.data['name']}",
-                                              style: TextStyle(fontSize: 16.0),
-                                            )),
-                                        SizedBox(
-                                          height: 5.0,
-                                        ),
-                                      ],
+                    if (snapshot.data.documents.length == 0) {
+                      return Center(
+                        child: Text("No Homeworks Submitted Yet !"),
+                      );
+                    } else {
+                      return ListView(
+                        children:
+                            snapshot.data.documents.map((DocumentSnapshot doc) {
+                          if (doc.data['isChecked'] == false) {
+                            return Padding(
+                              padding: const EdgeInsets.only(
+                                  top: 10.0, left: 15.0, right: 15.0),
+                              child: Card(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15.0)),
+                                elevation: 8.0,
+                                child: Column(
+                                  children: <Widget>[
+                                    Container(
+                                      margin: EdgeInsets.all(10.0),
+                                      child: Column(
+                                        children: <Widget>[
+                                          Align(
+                                              alignment: Alignment.topLeft,
+                                              child: Text(
+                                                "ADM ID: ${doc.documentID}",
+                                                style:
+                                                    TextStyle(fontSize: 16.0),
+                                              )),
+                                          SizedBox(
+                                            height: 5.0,
+                                          ),
+                                          Align(
+                                              alignment: Alignment.topLeft,
+                                              child: Text(
+                                                "Name: ${doc.data['name']}",
+                                                style:
+                                                    TextStyle(fontSize: 16.0),
+                                              )),
+                                          SizedBox(
+                                            height: 5.0,
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                  MaterialButton(
-                                    height: 40.0,
-                                    minWidth:
-                                        MediaQuery.of(context).size.width - 40,
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.only(
-                                            bottomLeft: Radius.circular(15.0),
-                                            bottomRight:
-                                                Radius.circular(15.0))),
-                                    onPressed: () async {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  HomeworkVerifier(
-                                                    title: doc.documentID,
-                                                    documentSnapshot: doc,
-                                                  )));
-                                    },
-                                    color: Colors.green,
-                                    child: Text(
-                                      "Open Homework",
-                                      style: TextStyle(
-                                          fontSize: 16.0,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.white),
-                                    ),
-                                  )
-                                ],
+                                    MaterialButton(
+                                      height: 40.0,
+                                      minWidth:
+                                          MediaQuery.of(context).size.width -
+                                              40,
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.only(
+                                              bottomLeft: Radius.circular(15.0),
+                                              bottomRight:
+                                                  Radius.circular(15.0))),
+                                      onPressed: () async {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    HomeworkVerifier(
+                                                      title: doc.documentID,
+                                                      documentSnapshot: doc,
+                                                    )));
+                                      },
+                                      color: Colors.green,
+                                      child: Text(
+                                        "Open Homework",
+                                        style: TextStyle(
+                                            fontSize: 16.0,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white),
+                                      ),
+                                    )
+                                  ],
+                                ),
                               ),
-                            ),
-                          );
-                        } else {
-                          return Padding(
-                            padding: const EdgeInsets.only(
-                                top: 10.0, left: 15.0, right: 15.0),
-                            child: Card(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(15.0)),
-                              elevation: 8.0,
-                              child: Column(
-                                children: <Widget>[
-                                  Container(
-                                    margin: EdgeInsets.all(10.0),
-                                    child: Column(
-                                      children: <Widget>[
-                                        Align(
-                                            alignment: Alignment.topLeft,
-                                            child: Text(
-                                              "ADM ID: ${doc.documentID}",
-                                              style: TextStyle(fontSize: 16.0),
-                                            )),
-                                        SizedBox(
-                                          height: 5.0,
-                                        ),
-                                        Align(
-                                            alignment: Alignment.topLeft,
-                                            child: Text(
-                                              "Name: ${doc.data['name']}",
-                                              style: TextStyle(fontSize: 16.0),
-                                            )),
-                                        SizedBox(
-                                          height: 5.0,
-                                        ),
-                                      ],
+                            );
+                          } else {
+                            return Padding(
+                              padding: const EdgeInsets.only(
+                                  top: 10.0, left: 15.0, right: 15.0),
+                              child: Card(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15.0)),
+                                elevation: 8.0,
+                                child: Column(
+                                  children: <Widget>[
+                                    Container(
+                                      margin: EdgeInsets.all(10.0),
+                                      child: Column(
+                                        children: <Widget>[
+                                          Align(
+                                              alignment: Alignment.topLeft,
+                                              child: Text(
+                                                "ADM ID: ${doc.documentID}",
+                                                style:
+                                                    TextStyle(fontSize: 16.0),
+                                              )),
+                                          SizedBox(
+                                            height: 5.0,
+                                          ),
+                                          Align(
+                                              alignment: Alignment.topLeft,
+                                              child: Text(
+                                                "Name: ${doc.data['name']}",
+                                                style:
+                                                    TextStyle(fontSize: 16.0),
+                                              )),
+                                          SizedBox(
+                                            height: 5.0,
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                  Align(
-                                    alignment: Alignment.center,
-                                    child: Text(
-                                      "Homework Checked ${doc.data['isCorrect'] ? "(Corrent)" : "(Wrong)"}",
-                                      style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold),
+                                    Align(
+                                      alignment: Alignment.center,
+                                      child: Text(
+                                        "Homework Checked ${doc.data['isCorrect'] ? "(Correct)" : "(Wrong)"}",
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold),
+                                      ),
                                     ),
-                                  ),
-                                  SizedBox(
-                                    height: 5.0,
-                                  )
-                                ],
+                                    SizedBox(
+                                      height: 5.0,
+                                    )
+                                  ],
+                                ),
                               ),
-                            ),
-                          );
-                        }
-                      }).toList(),
-                    );
+                            );
+                          }
+                        }).toList(),
+                      );
+                    }
                 }
               },
             ),

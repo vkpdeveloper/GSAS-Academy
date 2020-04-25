@@ -13,7 +13,8 @@ class OptionWidget extends StatelessWidget {
     return GestureDetector(
       onTap: onPressed,
       child: Container(
-        width: (MediaQuery.of(context).size.width / 2) - 50,
+        width: (MediaQuery.of(context).size.width / 2) - 40,
+        height: MediaQuery.of(context).size.height / 4,
         padding: EdgeInsets.all(20.0),
         decoration: BoxDecoration(
             color: Colors.white,

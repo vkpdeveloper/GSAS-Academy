@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_icons/flutter_icons.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gsasacademy/providers/chat_provider.dart';
 import 'package:gsasacademy/providers/teacher_provider.dart';
@@ -94,7 +95,7 @@ class TeacherHome extends StatelessWidget {
     }
 
     return Scaffold(
-      floatingActionButton: FloatingActionButton.extended(
+      floatingActionButton: FloatingActionButton(
         onPressed: () async {
           FirebaseAuth.instance.signOut();
           SharedPreferences _prefs = await SharedPreferences.getInstance();
@@ -102,134 +103,129 @@ class TeacherHome extends StatelessWidget {
           Fluttertoast.showToast(msg: "Logout Success");
           Navigator.pushNamed(context, '/loginscreen');
         },
-        label: Text("Logout"),
-        icon: Icon(Icons.exit_to_app),
+        tooltip: "LOG OUT",
+        child: Icon(FontAwesome.sign_out),
       ),
-      body: Center(
-        child: SingleChildScrollView(
-          child: Container(
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
-            decoration: BoxDecoration(
-                gradient: LinearGradient(
-                    begin: Alignment.topRight,
-                    end: Alignment.bottomRight,
-                    colors: [ThemeConst.primaryColor, Colors.white])),
-            child: Padding(
-              padding: const EdgeInsets.only(
-                  left: 15.0, right: 15.0, top: 40.0, bottom: 0.0),
-              child: Column(
-                children: <Widget>[
-                  Column(
+      body: SingleChildScrollView(
+        child: Container(
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+                  begin: Alignment.topRight,
+                  end: Alignment.bottomRight,
+                  colors: [ThemeConst.primaryColor, Colors.white])),
+          child: Padding(
+            padding: const EdgeInsets.only(
+                left: 15.0, right: 15.0, top: 40.0, bottom: 0.0),
+            child: Column(
+              children: <Widget>[
+                Column(
+                  children: <Widget>[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text(
+                          "Welcome, ${teacherProvider.getTeacherName}",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 22.0,
+                              color: Colors.white),
+                        ),
+                        CachedNetworkImage(
+                          placeholder: (context, str) {
+                            return CircularProgressIndicator(
+                              valueColor:
+                                  AlwaysStoppedAnimation<Color>(Colors.white),
+                            );
+                          },
+                          errorWidget: (context, str, event) {
+                            return CircularProgressIndicator(
+                              valueColor:
+                                  AlwaysStoppedAnimation<Color>(Colors.white),
+                            );
+                          },
+                          imageUrl: teacherProvider.getTeacherProfile,
+                          imageBuilder: (context, provider) {
+                            return CircleAvatar(
+                              backgroundColor: ThemeConst.primaryColor,
+                              backgroundImage: provider,
+                              radius: 25.0,
+                            );
+                          },
+                        )
+                      ],
+                    ),
+                    SizedBox(
+                      height: 10.0,
+                    ),
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(
+                      top: 8.0, right: 15.0, left: 15.0),
+                  child: Column(
                     children: <Widget>[
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                          Text(
-                            "Welcome, ${teacherProvider.getTeacherName}",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 22.0,
-                                color: Colors.white),
+                          OptionWidget(
+                            onPressed: () => Navigator.pushNamed(
+                                context, '/attendanceChecker'),
+                            label: "Attendance",
+                            optionImage: AssetImage('asset/images/shift.png'),
                           ),
-                          CachedNetworkImage(
-                            placeholder: (context, str) {
-                              return CircularProgressIndicator(
-                                valueColor:
-                                    AlwaysStoppedAnimation<Color>(Colors.white),
-                              );
-                            },
-                            errorWidget: (context, str, event) {
-                              return CircularProgressIndicator(
-                                valueColor:
-                                    AlwaysStoppedAnimation<Color>(Colors.white),
-                              );
-                            },
-                            imageUrl: teacherProvider.getTeacherProfile,
-                            imageBuilder: (context, provider) {
-                              return CircleAvatar(
-                                backgroundColor: ThemeConst.primaryColor,
-                                backgroundImage: provider,
-                                radius: 25.0,
-                              );
-                            },
+                          OptionWidget(
+                            onPressed: () =>
+                                Navigator.pushNamed(context, '/addHomework'),
+                            label: "Homework",
+                            optionImage: AssetImage('asset/images/book.png'),
                           )
                         ],
                       ),
                       SizedBox(
-                        height: 10.0,
+                        height: 20.0,
                       ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          OptionWidget(
+                            onPressed: () => Navigator.pushNamed(
+                                context, '/teacherVideoUploader'),
+                            label: "Class",
+                            optionImage: AssetImage('asset/images/video.png'),
+                          ),
+                          OptionWidget(
+                            onPressed: () => _showChatOpenerDialog(context),
+                            label: "Chat",
+                            optionImage:
+                                AssetImage('asset/images/communication.png'),
+                          )
+                        ],
+                      ),
+                      SizedBox(
+                        height: 20.0,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          OptionWidget(
+                            onPressed: () => Navigator.pushNamed(
+                                context, '/teacherGallery'),
+                            label: "Gallery",
+                            optionImage:
+                                AssetImage('asset/images/gallery.png'),
+                          ),
+                          OptionWidget(
+                            onPressed: () => Navigator.pushNamed(
+                                context, '/addRemoveStudent'),
+                            label: "Students",
+                            optionImage: AssetImage('asset/images/test.png'),
+                          ),
+                        ],
+                      )
                     ],
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                        top: 8.0, right: 15.0, left: 15.0),
-                    child: Column(
-                      children: <Widget>[
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            OptionWidget(
-                              onPressed: () => Navigator.pushNamed(
-                                  context, '/attendanceChecker'),
-                              label: "Attendance",
-                              optionImage: AssetImage('asset/images/shift.png'),
-                            ),
-                            OptionWidget(
-                              onPressed: () =>
-                                  Navigator.pushNamed(context, '/addHomework'),
-                              label: "Homework",
-                              optionImage: AssetImage('asset/images/book.png'),
-                            )
-                          ],
-                        ),
-                        SizedBox(
-                          height: 20.0,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            OptionWidget(
-                              onPressed: () => Navigator.pushNamed(
-                                  context, '/teacherVideoUploader'),
-                              label: "Class",
-                              optionImage: AssetImage('asset/images/video.png'),
-                            ),
-                            OptionWidget(
-                              onPressed: () => _showChatOpenerDialog(context),
-                              label: "Chat",
-                              optionImage:
-                                  AssetImage('asset/images/communication.png'),
-                            )
-                          ],
-                        ),
-                        SizedBox(
-                          height: 20.0,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            OptionWidget(
-                              onPressed: () => Navigator.pushNamed(
-                                  context, '/teacherGallery'),
-                              label: "Gallery",
-                              optionImage:
-                                  AssetImage('asset/images/gallery.png'),
-                            ),
-                            OptionWidget(
-                              onPressed: () => Navigator.pushNamed(
-                                  context, '/homeworkChecker'),
-                              label: "Checker",
-                              optionImage:
-                                  AssetImage('asset/images/test.png'),
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
-                  )
-                ],
-              ),
+                )
+              ],
             ),
           ),
         ),

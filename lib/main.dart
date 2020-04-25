@@ -10,6 +10,7 @@ import 'package:gsasacademy/providers/teacher_provider.dart';
 import 'package:gsasacademy/teacher/add_homework.dart';
 import 'package:gsasacademy/student/chatscreen.dart';
 import 'package:gsasacademy/student/student_gallery.dart';
+import 'package:gsasacademy/teacher/add_students.dart';
 import 'package:gsasacademy/teacher/chatscreen_teacher.dart';
 import 'package:gsasacademy/teacher/homescreen.dart';
 import 'package:gsasacademy/teacher/homework_checker.dart';
@@ -60,6 +61,7 @@ class MyApp extends StatelessWidget {
           '/teacherVideoUploader': (context) => TeacherVideoUploader(),
           '/teacherGallery': (context) => TeacherGallery(),
           '/homeworkChecker': (context) => HomeworkChecker(),
+          '/addRemoveStudent': (context) => AddRemoveStudents()
         },
         debugShowCheckedModeBanner: false,
         title: 'GSAS Academy',
@@ -100,15 +102,19 @@ class _SplashScreenState extends State<SplashScreen> {
       Timer(Duration(seconds: 3), () async {
         if (await _firebaseUtils.isLogged()) {
           SharedPreferences _pref = await SharedPreferences.getInstance();
-          if (_pref.getBool('isStudent')) {
-            FirebaseMessaging().subscribeToTopic(
-                '${_pref.getString('class')}_${_pref.getString('section')}');
-            FirebaseMessaging().subscribeToTopic(
-                '${_pref.getString('class')}_${_pref.getString('section')}_study');
-            Navigator.pushReplacementNamed(context, '/homescreen');
+          if (_pref.getBool('isStudent') != null) {
+            if (_pref.getBool('isStudent')) {
+              FirebaseMessaging().subscribeToTopic(
+                  '${_pref.getString('class')}_${_pref.getString('section')}');
+              FirebaseMessaging().subscribeToTopic(
+                  '${_pref.getString('class')}_${_pref.getString('section')}_study');
+              Navigator.pushReplacementNamed(context, '/homescreen');
+            } else {
+              FirebaseMessaging().subscribeToTopic('teacher');
+              Navigator.pushReplacementNamed(context, '/hometeacher');
+            }
           } else {
-            FirebaseMessaging().subscribeToTopic('teacher');
-            Navigator.pushReplacementNamed(context, '/hometeacher');
+            Navigator.pushReplacementNamed(context, '/loginscreen');
           }
         } else {
           Navigator.pushReplacementNamed(context, '/loginscreen');

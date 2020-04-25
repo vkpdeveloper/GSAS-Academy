@@ -72,11 +72,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 _admController.text,
                 url,
                 selectedSection,
-                firebaseToken);
+                firebaseToken,
+                _scaffold.currentContext, progressDialog);
             progressDialog.dismiss();
-            Fluttertoast.showToast(msg: "Verification Successful");
-            Navigator.pushReplacementNamed(
-                _scaffold.currentContext, '/homescreen');
           } else {
             progressDialog.dismiss();
             Fluttertoast.showToast(msg: "Verification Unsuccessful");
@@ -86,11 +84,7 @@ class _LoginScreenState extends State<LoginScreen> {
         _firebaseUtils.uploadImageTeacher(pickedImage).then((url) {
           if (url != null) {
             _firebaseUtils.saveTeacherData(
-                _nameTeacher.text, _mobileTeacher.text, url, firebaseToken);
-            progressDialog.dismiss();
-            Fluttertoast.showToast(msg: "Verification Successful");
-            Navigator.pushReplacementNamed(
-                _scaffold.currentContext, '/hometeacher');
+                _nameTeacher.text, _mobileTeacher.text, url, firebaseToken, progressDialog, _scaffold.currentContext);
           } else {
             progressDialog.dismiss();
             Fluttertoast.showToast(msg: "Verification Unsuccessful");
@@ -197,11 +191,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     _admController.text,
                     url,
                     selectedSection,
-                    firebaseToken);
-                progressDialog.dismiss();
-                Fluttertoast.showToast(msg: "Verification Successful");
-                Navigator.pushReplacementNamed(
-                    _scaffold.currentContext, '/homescreen');
+                    firebaseToken,
+                    _scaffold.currentContext, progressDialog);
               } else {
                 progressDialog.dismiss();
                 Fluttertoast.showToast(msg: "Verification Unsuccessful");
@@ -211,10 +202,7 @@ class _LoginScreenState extends State<LoginScreen> {
             _firebaseUtils.uploadImageTeacher(pickedImage).then((url) {
               if (url != null) {
                 _firebaseUtils.saveTeacherData(
-                    _nameTeacher.text, _mobileTeacher.text, url, firebaseToken);
-                progressDialog.dismiss();
-                Navigator.pushReplacementNamed(context, '/hometeacher');
-                Fluttertoast.showToast(msg: "Verification Successful");
+                    _nameTeacher.text, _mobileTeacher.text, url, firebaseToken, progressDialog, _scaffold.currentContext);
               } else {
                 progressDialog.dismiss();
                 Fluttertoast.showToast(msg: "Verification Unsuccessful");

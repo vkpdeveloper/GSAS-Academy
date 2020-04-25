@@ -19,6 +19,16 @@ class AddHomework extends StatelessWidget {
         Provider.of<ImageUploadProvider>(context);
     return Scaffold(
       appBar: AppBar(
+        actions: <Widget>[
+          FlatButton(
+            child: Text(
+              "Check Homework",
+              style: TextStyle(fontSize: 16.0),
+            ),
+            textColor: Colors.white,
+            onPressed: () => Navigator.pushNamed(context, '/homeworkChecker'),
+          )
+        ],
         title: Text("Add Homework"),
       ),
       body: Container(
@@ -104,7 +114,9 @@ class AddHomework extends StatelessWidget {
                 minWidth: MediaQuery.of(context).size.width - 30,
                 height: 40.0,
               ),
-              SizedBox(height: 15.0,),
+              SizedBox(
+                height: 15.0,
+              ),
               TextField(
                 controller: _aboutHomeworkCont,
                 decoration: InputDecoration(
@@ -129,8 +141,8 @@ class AddHomework extends StatelessWidget {
                   onPressed: () {
                     if (_aboutHomeworkCont.text.trim() != "") {
                       if (provider.getSelectionText == "PDF Selected") {
-                        _utils.addHomeWorkInClass(
-                            imageUploadProvider, provider, _aboutHomeworkCont.text);
+                        _utils.addHomeWorkInClass(imageUploadProvider, provider,
+                            _aboutHomeworkCont.text);
                       } else {
                         Fluttertoast.showToast(msg: "PDF File not selected");
                       }
