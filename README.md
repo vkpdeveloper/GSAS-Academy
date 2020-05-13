@@ -1,6 +1,6 @@
 # GSAS ACADEMY
 
-A School app built on Flutter
+<b>A Open Source School App Built on Flutter Framework by Google</b>
 
 ## Get it on Google Play
 
