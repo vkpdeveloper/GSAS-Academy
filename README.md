@@ -1,4 +1,4 @@
-# GSAS ACADEMY
+# GSAS Academy
 
 <b>A Open Source School App Built on Flutter Framework by Google</b>
 
