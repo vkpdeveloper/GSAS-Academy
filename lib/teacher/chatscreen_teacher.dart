@@ -180,7 +180,7 @@ class _ChatScreenTeacherState extends State<ChatScreenTeacher>
     return WillPopScope(
       onWillPop: () async {
         FirebaseMessaging().subscribeToTopic(
-            "${chatProvider.getSelectedClass}_${chatProvider.getSelectedSection}");
+            "${chatProvider.getSelectedClass}_${chatProvider.getSelectedSection}_teacher");
         Navigator.pop(context);
         return false;
       },
@@ -855,13 +855,15 @@ class _ChatScreenTeacherState extends State<ChatScreenTeacher>
                     child: Icon(FontAwesome.file_photo_o),
                     onPressed: () async {
                       File myImage = await ImagePicker.pickImage(
-                          source: ImageSource.gallery);
-                      _utils.sendImageMessageAsTeacher(chatProvider,
-                          _imageUploadProvider, myImage, teacherProvider);
-                      _controller.animateTo(
-                          _controller.position.maxScrollExtent,
-                          duration: Duration(milliseconds: 200),
-                          curve: Curves.linearToEaseOut);
+                          source: ImageSource.gallery, imageQuality: 50);
+                      if (myImage != null) {
+                        _utils.sendImageMessageAsTeacher(chatProvider,
+                            _imageUploadProvider, myImage, teacherProvider);
+                        _controller.animateTo(
+                            _controller.position.maxScrollExtent,
+                            duration: Duration(milliseconds: 200),
+                            curve: Curves.linearToEaseOut);
+                      }
                     },
                     foregroundColor: Colors.white,
                     backgroundColor: ThemeConst.primaryColor,

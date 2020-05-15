@@ -755,13 +755,15 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                     child: Icon(FontAwesome.file_photo_o),
                     onPressed: () async {
                       File myImage = await ImagePicker.pickImage(
-                          source: ImageSource.gallery);
-                      _utils.uploadImageWithProvider(
-                          myImage, _imageUploadProvider, _studentProvider);
-                      _controller.animateTo(
-                          _controller.position.maxScrollExtent,
-                          duration: Duration(milliseconds: 200),
-                          curve: Curves.linearToEaseOut);
+                          source: ImageSource.gallery, imageQuality: 50);
+                      if (myImage != null) {
+                        _utils.uploadImageWithProvider(
+                            myImage, _imageUploadProvider, _studentProvider);
+                        _controller.animateTo(
+                            _controller.position.maxScrollExtent,
+                            duration: Duration(milliseconds: 200),
+                            curve: Curves.linearToEaseOut);
+                      }
                     },
                     foregroundColor: Colors.white,
                     backgroundColor: ThemeConst.primaryColor,

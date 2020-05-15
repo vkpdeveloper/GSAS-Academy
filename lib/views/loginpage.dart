@@ -19,7 +19,23 @@ class _LoginScreenState extends State<LoginScreen> {
   bool isStudentLogger = true;
   bool isProfileUploaded = false;
   ProgressDialog progressDialog;
-  List<String> classes = ["Select Class", "9th", "10th", "11th", "12th"];
+  List<String> classes = [
+    "Select Class",
+    'LKG',
+    'UKG',
+    '1st',
+    '2nd',
+    '3rd',
+    '4th',
+    '5th',
+    '6th',
+    '7th',
+    '8th',
+    '9th',
+    '10th',
+    '11th',
+    '12th'
+  ];
   String selectedClass = "Select Class";
   File pickedImage;
   TextEditingController _nameController = TextEditingController();
@@ -73,7 +89,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 url,
                 selectedSection,
                 firebaseToken,
-                _scaffold.currentContext, progressDialog);
+                _scaffold.currentContext,
+                progressDialog);
             progressDialog.dismiss();
           } else {
             progressDialog.dismiss();
@@ -84,7 +101,12 @@ class _LoginScreenState extends State<LoginScreen> {
         _firebaseUtils.uploadImageTeacher(pickedImage).then((url) {
           if (url != null) {
             _firebaseUtils.saveTeacherData(
-                _nameTeacher.text, _mobileTeacher.text, url, firebaseToken, progressDialog, _scaffold.currentContext);
+                _nameTeacher.text,
+                _mobileTeacher.text,
+                url,
+                firebaseToken,
+                progressDialog,
+                _scaffold.currentContext);
           } else {
             progressDialog.dismiss();
             Fluttertoast.showToast(msg: "Verification Unsuccessful");
@@ -192,7 +214,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     url,
                     selectedSection,
                     firebaseToken,
-                    _scaffold.currentContext, progressDialog);
+                    _scaffold.currentContext,
+                    progressDialog);
               } else {
                 progressDialog.dismiss();
                 Fluttertoast.showToast(msg: "Verification Unsuccessful");
@@ -202,7 +225,12 @@ class _LoginScreenState extends State<LoginScreen> {
             _firebaseUtils.uploadImageTeacher(pickedImage).then((url) {
               if (url != null) {
                 _firebaseUtils.saveTeacherData(
-                    _nameTeacher.text, _mobileTeacher.text, url, firebaseToken, progressDialog, _scaffold.currentContext);
+                    _nameTeacher.text,
+                    _mobileTeacher.text,
+                    url,
+                    firebaseToken,
+                    progressDialog,
+                    _scaffold.currentContext);
               } else {
                 progressDialog.dismiss();
                 Fluttertoast.showToast(msg: "Verification Unsuccessful");
@@ -471,11 +499,12 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                           TextField(
                             controller: _admController,
+                            maxLength: 12,
                             decoration: InputDecoration(
                                 contentPadding:
                                     const EdgeInsets.symmetric(vertical: 5.0),
                                 prefixIcon: Icon(Icons.lock),
-                                hintText: "eg. GSASAC/00000",
+                                hintText: "GSASAC/00000",
                                 labelText: "Admission ID",
                                 border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(35.0))),

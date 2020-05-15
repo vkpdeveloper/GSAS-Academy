@@ -89,9 +89,6 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     checkInternetAndRedirect();
-    _messaging.configure(onMessage: (data) {
-      print(data);
-    });
   }
 
   checkInternetAndRedirect() async {

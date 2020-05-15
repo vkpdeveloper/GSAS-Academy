@@ -108,6 +108,8 @@ class TeacherHome extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         child: Container(
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
           decoration: BoxDecoration(
               gradient: LinearGradient(
                   begin: Alignment.topRight,
@@ -127,7 +129,7 @@ class TeacherHome extends StatelessWidget {
                           "Welcome, ${teacherProvider.getTeacherName}",
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
-                              fontSize: 22.0,
+                              fontSize: 18.0,
                               color: Colors.white),
                         ),
                         CachedNetworkImage(
@@ -160,8 +162,8 @@ class TeacherHome extends StatelessWidget {
                   ],
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(
-                      top: 8.0, right: 15.0, left: 15.0),
+                  padding:
+                      const EdgeInsets.only(top: 8.0, right: 15.0, left: 15.0),
                   child: Column(
                     children: <Widget>[
                       Row(
@@ -208,11 +210,10 @@ class TeacherHome extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
                           OptionWidget(
-                            onPressed: () => Navigator.pushNamed(
-                                context, '/teacherGallery'),
+                            onPressed: () =>
+                                Navigator.pushNamed(context, '/teacherGallery'),
                             label: "Gallery",
-                            optionImage:
-                                AssetImage('asset/images/gallery.png'),
+                            optionImage: AssetImage('asset/images/gallery.png'),
                           ),
                           OptionWidget(
                             onPressed: () => Navigator.pushNamed(

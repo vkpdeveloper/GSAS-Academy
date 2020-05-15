@@ -3,13 +3,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:gsasacademy/providers/chat_provider.dart';
-import 'package:gsasacademy/providers/teacher_provider.dart';
 import 'package:provider/provider.dart';
 
 class StudentAttendance extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    TeacherProvider teacherProvider = Provider.of<TeacherProvider>(context);
     ChatProvider provider = Provider.of<ChatProvider>(context);
     return Scaffold(
       backgroundColor: Colors.white,
@@ -19,6 +17,53 @@ class StudentAttendance extends StatelessWidget {
       body: Container(
         child: Column(
           children: <Widget>[
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 20, vertical: 10.0),
+              child: Column(
+                children: <Widget>[
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: Text(
+                      "Select Date : ",
+                      style: TextStyle(fontSize: 16.0),
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      DropdownButton<String>(
+                        value: provider.getSelectedDay,
+                        onChanged: (value) {
+                          provider.setDay(value);
+                        },
+                        items: provider.getAllDays.map((day) {
+                          return DropdownMenuItem<String>(
+                            value: day,
+                            child: Text("Date $day"),
+                          );
+                        }).toList(),
+                      ),
+                      SizedBox(
+                        width: 40.0,
+                      ),
+                      DropdownButton<String>(
+                        value: provider.getSelectedMonth,
+                        onChanged: (value) {
+                          provider.setMonth(value);
+                        },
+                        items: provider.getAllMonths.map((month) {
+                          return DropdownMenuItem<String>(
+                            value: month,
+                            child: Text("Month $month"),
+                          );
+                        }).toList(),
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ),
             Padding(
               padding:
                   const EdgeInsets.symmetric(vertical: 10.0, horizontal: 40.0),

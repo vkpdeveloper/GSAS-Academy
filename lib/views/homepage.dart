@@ -92,11 +92,9 @@ class HomeScreen extends StatelessWidget {
                                 BoxShadow(
                                     blurRadius: 14,
                                     color: Colors.black12.withOpacity(0.1),
-                                    offset: Offset(10, 10)),
-                                BoxShadow(
-                                    blurRadius: 14,
-                                    color: Colors.black12.withOpacity(0.1),
-                                    offset: Offset(-10, -10))
+                                    spreadRadius: 10
+                                ),
+                                
                               ]),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -124,7 +122,7 @@ class HomeScreen extends StatelessWidget {
                                 height: 15.0,
                               ),
                               Text(
-                                "Vaibhav Pathak",
+                                _studentProvider.getStudentName,
                                 style: TextStyle(
                                     color: Colors.black,
                                     fontSize: 16.0,

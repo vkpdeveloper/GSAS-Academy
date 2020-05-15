@@ -44,8 +44,7 @@ class AddRemoveStudents extends StatelessWidget {
                           Padding(
                             padding: const EdgeInsets.symmetric(
                                 vertical: 10.0, horizontal: 40.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
+                            child: Column(
                               children: <Widget>[
                                 DropdownButton<String>(
                                   value: provider.getSelectedClass,
@@ -60,7 +59,7 @@ class AddRemoveStudents extends StatelessWidget {
                                   }).toList(),
                                 ),
                                 SizedBox(
-                                  width: 20.0,
+                                  width: 15.0,
                                 ),
                                 DropdownButton<String>(
                                   value: provider.getSelectedSection,
@@ -182,19 +181,24 @@ class AddRemoveStudents extends StatelessWidget {
             stream: Firestore.instance
                 .collection(provider.getSelectedClass)
                 .where('section', isEqualTo: provider.getSelectedSection)
+                .orderBy('name', descending: false)
                 .snapshots(),
             builder:
                 (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
               switch (snapshot.connectionState) {
                 case ConnectionState.waiting:
-                  return Center(
-                    child: CircularProgressIndicator(),
+                  return Expanded(
+                    child: Center(
+                      child: CircularProgressIndicator(),
+                    ),
                   );
                 default:
                   if (snapshot.data.documents.length == 0) {
-                    return Center(
-                      child: Text(
-                          "No Students are is class ${provider.getSelectedClass}"),
+                    return Expanded(
+                      child: Center(
+                        child: Text(
+                            "No Students are is class ${provider.getSelectedClass}"),
+                      ),
                     );
                   } else {
                     return Expanded(

@@ -52,7 +52,6 @@ class FirebaseUtils {
         }, merge: true);
         Fluttertoast.showToast(msg: "Login Successful");
         Navigator.pushReplacementNamed(context, '/homescreen');
-        progressDialog.dismiss();
       } else {
         progressDialog.dismiss();
         Fluttertoast.showToast(msg: "Student is not registered with us.");
@@ -134,10 +133,10 @@ class FirebaseUtils {
     }); 
     String topic = "${className}_$section";
     Response res = await get(
-        'https://arcane-tor-25475.herokuapp.com/send?topic=$topic&title=New Message&msg=$message');
+        'https://arcane-tor-25475.herokuapp.com/send?topic=$topic&title=$name&msg=$message');
     topic = "${className}_${section}_teacher";
     res = await get(
-        'https://arcane-tor-25475.herokuapp.com/send?topic=$topic&title=New Message ($className Section: $section) &msg=$message');
+        'https://arcane-tor-25475.herokuapp.com/send?topic=$topic&title=$name ($className Section: $section) &msg=$message');
   }
 
   Future<List> uploadImagetoStorage(File imageFile) async {
@@ -165,10 +164,10 @@ class FirebaseUtils {
     });
     String topic = "${className}_$section";
     Response res = await get(
-        'https://arcane-tor-25475.herokuapp.com/send?topic=$topic&title=New Message&msg=Photo');
+        'https://arcane-tor-25475.herokuapp.com/send?topic=$topic&title=$name&msg=Photo');
     topic = "${className}_${section}_teacher";
     res = await get(
-        'https://arcane-tor-25475.herokuapp.com/send?topic=$topic&title=New Message ($className Section: $section) &msg=Photo');
+        'https://arcane-tor-25475.herokuapp.com/send?topic=$topic&title=$name ($className Section: $section) &msg=Photo');
   }
 
   void uploadImageWithProvider(
@@ -277,11 +276,11 @@ class FirebaseUtils {
     String topic =
         "${chatProvider.getSelectedClass}_${chatProvider.getSelectedSection}";
     await get(
-        'https://arcane-tor-25475.herokuapp.com/send?topic=$topic&title=New Message&msg=$message');
+        'https://arcane-tor-25475.herokuapp.com/send?topic=$topic&title=${teacherProvider.getTeacherName}, Sir&msg=$message');
     topic =
         "${chatProvider.getSelectedClass}_${chatProvider.getSelectedSection}_teacher";
     await get(
-        'https://arcane-tor-25475.herokuapp.com/send?topic=$topic&title=New Message (${chatProvider.getSelectedClass} Section: ${chatProvider.getSelectedSection}) &msg=$message');
+        'https://arcane-tor-25475.herokuapp.com/send?topic=$topic&title=${teacherProvider.getTeacherName}, Sir (${chatProvider.getSelectedClass} Section: ${chatProvider.getSelectedSection}) &msg=$message');
   }
 
   deleteStudentMessageByTeacher(
@@ -307,7 +306,7 @@ class FirebaseUtils {
   }
 
   sendImageMessageByTeacher(
-      ChatProvider chatProvider, List data, TeacherProvider teacherProvider) {
+      ChatProvider chatProvider, List data, TeacherProvider teacherProvider) async {
     _firestore
         .collection('chat')
         .document(chatProvider.getSelectedClass)
@@ -335,11 +334,11 @@ class FirebaseUtils {
     String topic =
         "${chatProvider.getSelectedClass}_${chatProvider.getSelectedSection}";
     await get(
-        'https://arcane-tor-25475.herokuapp.com/send?topic=$topic&title=New Message&msg=Photo');
+        'https://arcane-tor-25475.herokuapp.com/send?topic=$topic&title=${teacherProvider.getTeacherName}, Sir &msg=Photo');
     topic =
         "${chatProvider.getSelectedClass}_${chatProvider.getSelectedSection}_teacher";
     await get(
-        'https://arcane-tor-25475.herokuapp.com/send?topic=$topic&title=New Message (${chatProvider.getSelectedClass} Section: ${chatProvider.getSelectedSection}) &msg=Photo');
+        'https://arcane-tor-25475.herokuapp.com/send?topic=$topic&title=${teacherProvider.getTeacherName}, Sir (${chatProvider.getSelectedClass} Section: ${chatProvider.getSelectedSection}) &msg=Photo');
   }
 
   uploadHomeFile(

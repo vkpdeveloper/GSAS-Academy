@@ -22,11 +22,8 @@ class OptionWidget extends StatelessWidget {
               BoxShadow(
                   blurRadius: 14,
                   color: Colors.black12.withOpacity(0.1),
-                  offset: Offset(10, 10)),
-              BoxShadow(
-                  blurRadius: 14,
-                  color: Colors.black12.withOpacity(0.1),
-                  offset: Offset(-10, -10))
+                  spreadRadius: 10.0
+              )
             ],
             borderRadius: BorderRadius.circular(15.0)),
         child: Column(
